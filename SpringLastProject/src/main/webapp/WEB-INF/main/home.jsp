@@ -16,7 +16,7 @@
                     <div class="single_catagory wow fadeInUp" data-wow-delay=".3s">
                         <img src="../img/catagory-img/1.jpg" alt="">
                         <div class="catagory-title">
-                            <a href="#">
+                            <a href="../food/list.do">
                                 <h5>맛집</h5>
                             </a>
                         </div>
@@ -26,7 +26,7 @@
                     <div class="single_catagory wow fadeInUp" data-wow-delay=".6s">
                         <img src="../img/catagory-img/2.jpg" alt="">
                         <div class="catagory-title">
-                            <a href="#">
+                            <a href="../recipe/list.do">
                                 <h5>레시피</h5>
                             </a>
                         </div>
@@ -235,9 +235,7 @@
                                 <div class="add-text">
                                     <div class="yummy-table">
                                         <div class="yummy-table-cell">
-                                            <h2>Goods By</h2>
-                                            <p>Buy Goods Online Now!</p>
-                                            <a href="#" class="add-btn">Buy Now</a>
+                                            <embed src="http://youtube.com/embed/GSPeTBjS9eo\u0026pp=ygUK7Jik66mU6rCAMw%3D%3D" style="width:100%"></embed>
                                         </div>
                                     </div>
                                 </div>

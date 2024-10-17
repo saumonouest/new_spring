@@ -6,55 +6,94 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style type="text/css">
-#chatArea {
-	height: 450px;
-	overflow-y:auto;
-	border: 1px solid black;
+#chatArea{
+  height: 450px;
+  overflow-y:auto;
+  border: 1px solid black; 
 }
 </style>
 <script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.3.0/sockjs.min.js"></script>
 <script type="text/javascript">
-let websocket
-let name
-function connection(){
-	// 서버 연결
-	name=$('#name').val()
-	if(name.trim()===""){
-		$('#name').focus()
+let websocket;
+// 서버연결 
+function connection()
+{
+	// 소켓연결 
+	websocket=new WebSocket("ws://localhost:8080/web/site/chat/chat-ws")
+	websocket.onopen=onOpen
+	websocket.onclose=onClose
+	websocket.onmessage=onMessage
+}
+// 연결처리 => Callback 
+function onOpen(event)
+{
+	 alert("채팅서버와 연결되었습니다!!")
+}
+function onClose(event)
+{
+	 alert("채팅서버와 연결이 해제되었습니다!!")
+}
+function onMessage(event)
+{
+	 let data=event.data // 서버에서 보낸 데이터 
+	 if(data.substring(0,4)==="msg:")
+	 {
+		 $('#recvMsg').append("<font color=red>"+data.substring(4)+"</font><br>")
+	 }
+	 else if(data.substring(0,3)==="my:")
+	 {
+		 $('#recvMsg').append("<font color=blue>"+data.substring(3)+"</font><br>")
+	 }
+	 else if(data.substring(0,4)==="you:")
+	 {
+		 $('#recvMsg').append(data.substring(4)+"<br>")
+	 }
+	 // 스크롤위치 지정
+	 let ch=$('#chatArea').height()
+	 let m=$("#recvMsg").height()-ch
+	 $('#chatArea').scrollTop(m)
+}
+function disConnection()
+{
+	websocket.close()
+}
+// 퇴장처리 => Callback
+// 메세지 전송 => Callback
+
+function send()
+{
+	let msg=$('#sendMsg').val()
+	if(msg.trim()==="")
+	{
+		$('#sendMsg').focus()
 		return
 	}
-	websocket=new WebSocket("ws://localhost:8080/web/site/chat/chat-ws")
-	websocket.onopen= onOpen
-	websocket.onclose= onClose
-	websocket.onmessage= onMessage
+	websocket.send(msg)
+	$('#sendMsg').val("")
+	$('#sendMsg').focus()
 }
-// 연결이 된 경우
-function onOpen(event){
-	alert("연결 완")
-}
-// 연결이 해제 된 경우
-function onClose(event){
-	alert("연결 해제")	
-}
-// 메세지가 정상으로 전송
-function onMessage(event){
-	// 서버에서 메세지를 받은 경우		
-}
-function appendMessage(msg){
-	// div 출력 => 스크롤바 조절	
-}
-function send(){
-	// 서버로 데이터 전송	
-}
-// 이벤트 처리
 $(function(){
-	
+	$('#inputBtn').click(function(){
+		connection()
+	})
+	$('#outputBtn').click(function(){
+		disConnection()
+	})
+	$('#sendBtn').click(function(){
+		send()
+	})
+	$('#sendMsg').keydown(function(key){
+		if(key.keyCode===13) // enter
+		{
+		   send()	
+		}
+	})
 })
 </script>
 </head>
 <body>
-  <!-- ****** Breadcumb Area Start ****** -->
+<!-- ****** Breadcumb Area Start ****** -->
     <div class="breadcumb-area" style="background-image: url(../img/bg-img/breadcumb.jpg);">
         <div class="container h-100">
             <div class="row h-100 align-items-center">
@@ -80,57 +119,33 @@ $(function(){
             <div class="row justify-content-center">
                 <div class="col-12 col-lg-8">
                     <div class="row no-gutters">
-                      <table class="table">
-                       <tr>
-                        <td>
-                         <input type=text class="input-sm" id="name" size=20>
-                         <input type=button class="input-sm btn-success" value="입장">
-                         <input type=button class="input-sm btn-info" value="퇴장">
-                        </td>
-                       </tr>
-                       <tr>
-                        <td>
-                         <div id="chatArea">
-                          <div id="recvMsg"></div>
-                         </div>
-                        </td>
-                       </tr>
-                       <tr>
-                        <td>
-                         <input type=text id="sendMsg" class="input-sm" size=70>
-                         <input type=button value="전송" class="btn btn-sm btn-primary">
-                        </td>
-                       </tr>
-                      </table>
+                     <table class="table">
+				      <tr>
+				        <td>
+				   
+				         <input type=button value="입장" class="btn-danger btn-sm" id="inputBtn">
+				         <input type=button value="퇴장" class="btn-success btn-sm" id="outputBtn">
+				        </td>
+				      </tr>
+				      <tr>
+				       <td>
+				        <div id="chatArea">
+				          <div id="recvMsg"></div>
+				        </div>
+				       </td>
+				      </tr>
+				      <tr>
+				        <td>
+				          <input type=text id="sendMsg" size=60 class="input-sm">
+				          <input type=button id="sendBtn" value="전송" class="btn-sm btn-primary">
+				        </td>
+				      </tr>
+				     </table>
                     </div>
                 </div>
             </div>
         </div>
+        
     </section>
-</body>
+  </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

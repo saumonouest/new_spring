@@ -10,4 +10,5 @@ public interface CommentService {
 	public void commentDelete(Map map);
 	public void foodReplyDecrement(int fno);
 	public void commentUpdate(CommentVO vo);
+	
 }
